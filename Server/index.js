@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const cors = require("cors");
+var cors = require('cors')
 const cookieParser = require("cookie-parser");
 const userRoute = require("./Routes/userRoute");
 const { restrictUserLogin } = require("./Middlewares/auth");
@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5002",
+    origin: "http://localhost:5173",
     methods: "GET, POST, PUT, DELETE",
     credentials: true,
   })

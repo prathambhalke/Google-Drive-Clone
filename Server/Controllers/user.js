@@ -17,13 +17,13 @@ async function handleUserSignUp(req, res) {
 }
 
 async function handleUserLogin(req, res) {  
-  const { name, password } = req.body;
-  const logUser = await User.findOne({ name, password });
+  const { email, password } = req.body;
+  const logUser = await User.findOne({ email, password });
   if (!logUser) return res.status(404).json("Invalid UserName or Password⚠️");
   const sessionId = uuidv4();
   setUser(sessionId, logUser);
   res.cookie("uid", sessionId);
-  return res.status(204).json(`${name} Login SuccessFully🚀!`);
+  return res.status(204).json(`${email} Login SuccessFully🚀!`);
 }
 
 module.exports = { handleUserSignUp, handleUserLogin };
