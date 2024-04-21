@@ -1,58 +1,42 @@
-import  { useState } from 'react';
+import { useState } from 'react';
+import { IoMdAdd } from "react-icons/io";
+import { FaRegStar } from "react-icons/fa";
+import { FaGoogleDrive } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import FileContent from '../FileContent';
 
 const SideBar = () => {
   const [activeTab, setActiveTab] = useState('myDrive');
 
-  const changeTab = (tabName : any) => {
+  const changeTab = (tabName) => {
     setActiveTab(tabName);
   };
 
+  // Array of buttons
+  const buttons = [
+    { icon: <IoMdAdd />, label: "New", tab: "new" },
+    { icon: <FaGoogleDrive />, label: "My Drive", tab: "myDrive" },
+    { icon: <FaRegStar />, label: "Starred", tab: "starred" },
+    { icon: <RiDeleteBin6Line />, label: "Bin", tab: "bin" }
+  ];
+
   return (
-    <div className="flex h-screen">
+    <div className="flex h-[88vh] pb-3">
       {/* Sidebar */}
-      <div className="flex flex-col w-1/4 bg-gray-200">
-        <div className="p-4">
-          <button
-            className="block w-full py-2 px-4 mb-4 text-gray-700 rounded-md bg-white border border-gray-300 hover:bg-gray-100 focus:outline-none"
-            onClick={() => changeTab('new')}
-          >
-            New
-          </button>
-          <button
-            className={`block w-full py-2 px-4 mb-4 text-gray-700 rounded-md focus:outline-none ${activeTab === 'myDrive' ? 'bg-blue-500 text-white' : 'bg-white border border-gray-300 hover:bg-gray-100'}`}
-            onClick={() => changeTab('myDrive')}
-          >
-            My Drive
-          </button>
-          <button
-            className={`block w-full py-2 px-4 mb-4 text-gray-700 rounded-md focus:outline-none ${activeTab === 'starred' ? 'bg-blue-500 text-white' : 'bg-white border border-gray-300 hover:bg-gray-100'}`}
-            onClick={() => changeTab('starred')}
-          >
-            Starred
-          </button>
-          <button
-            className={`block w-full py-2 px-4 mb-4 text-gray-700 rounded-md focus:outline-none ${activeTab === 'bin' ? 'bg-blue-500 text-white' : 'bg-white border border-gray-300 hover:bg-gray-100'}`}
-            onClick={() => changeTab('bin')}
-          >
-            Bin
-          </button>
+      <div className="flex flex-col w-36 bg-transparent mx-14 mt-2">
+        <div>
+          {buttons.map((button, index) => (
+            <button
+              key={index}
+              className={`w-full py-2 px-4 mb-4 flex items-center text-gray-700 rounded-md ${activeTab === button.tab ? 'bg-blue-500 text-white' : 'bg-white border hover:bg-gray-100'}`}
+              onClick={() => changeTab(button.tab)}
+            >
+              <span className='mr-2'>{button.icon}</span> {button.label}
+            </button>
+          ))}
         </div>
       </div>
-      
-      {/* Main Content */}
-      <div className="flex flex-col w-3/4 bg-white">
-        {/* Content based on active tab */}
-        {activeTab === 'myDrive' && (
-          <div className="p-4">My Drive Content</div>
-        )}
-        {activeTab === 'starred' && (
-          <div className="p-4">Starred Content</div>
-        )}
-        {activeTab === 'bin' && (
-          <div className="p-4">Bin Content</div>
-        )}
-        {/* Add more content for other tabs as needed */}
-      </div>
+      <FileContent activeTab={activeTab} />
     </div>
   );
 };
