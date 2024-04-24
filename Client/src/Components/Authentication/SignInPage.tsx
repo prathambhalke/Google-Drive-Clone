@@ -20,7 +20,7 @@ const SignInPage = () => {
       .then((res) => {
         toast.success("Login SuccessFully🚀!");
         // Redirect to dashboard or any other page upon successful login
-        navigate("/home");
+        navigate("/");
       })
       .catch((err) => {
         toast.error("Invalid UserName or Password⚠️");

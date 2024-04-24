@@ -4,4 +4,6 @@ export { default as Home } from "./Home/Home";
 export {default as SideBar} from "./Home/SideBar"
 export {default as Header} from "./Header"
 export {default as FileContent} from "./FileContent"
+export {default as CreateFolder} from "./Popups/CreateFolder"
+export {default as ProfileDetails} from "./ProfileDetails"
 
