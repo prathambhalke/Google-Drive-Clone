@@ -48,7 +48,10 @@ const onFolderUpload = () => {
                 <MdUploadFile size={24} className="mx-4" />
                 File Upload
               </button>
-              <input type="file" name="fileupload" ref={Ref} id="fileupload" hidden/>
+              <form action="/upload" method="POST" encType="multipart/form-data">
+              <input type="file" name="fileupload" ref={Ref} id="fileupload" />
+              <button type="submit">upload</button>
+              </form>
             </div>
           )}
           <button

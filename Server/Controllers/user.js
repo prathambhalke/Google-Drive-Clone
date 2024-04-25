@@ -26,4 +26,13 @@ async function handleUserLogin(req, res) {
   return res.status(204).json(`${email} Login SuccessFully🚀!`);
 }
 
-module.exports = { handleUserSignUp, handleUserLogin };
+async function handleFileUpload(req, res) {
+  try{
+   res.send("💡","uploadeeuhgggggggggggggg");
+  }catch(err){
+    res.json("💡","err");
+  }
+// console.log("🟩",req.file);
+// return res.json(req.body)
+}
+module.exports = { handleUserSignUp, handleUserLogin, handleFileUpload };
