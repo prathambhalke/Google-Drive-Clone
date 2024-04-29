@@ -2,7 +2,7 @@ const { default: mongoose } = require("mongoose");
 
 const filesUploadDataSchema = mongoose.Schema(
         {
-            fileData : Object
+            fileData : String
         },
         {
             collection: "fileDetails",
