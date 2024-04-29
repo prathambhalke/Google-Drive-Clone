@@ -8,7 +8,6 @@ import { MdUploadFile } from "react-icons/md";
 import FileContent from "../FileContent";
 import CreateFolder from "../Popups/CreateFolder";
 import axios from "axios";
-import { json } from "react-router-dom";
 const SideBar = () => {
   const [activeTab, setActiveTab] = useState("myDrive");
   const [newSelectVisible, setNewSelectVisible] = useState<boolean>(false);
