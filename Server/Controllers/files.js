@@ -3,11 +3,10 @@ const { default: mongoose } = require("mongoose");
 require("../Models/filesUploadData");
 const file = mongoose.model("fileDetails")
 async function handleFileUpload(req, res) {
-    const fileD = req.file.originalname;
-
-    console.log(fileD)
+    const fileD = req.file.filename;
+    const oriFileName = req.file.originalname;
     try {
-         let newFile = await file.create({fileData: fileD});
+         let newFile = await file.create({fileData: fileD,origFileName : oriFileName});
         newFile.save();
        return res.json({status: "OK🟩"});
     } catch (err) {

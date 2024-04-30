@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
       cb(null,uniqueSuffix + file.originalname)
     }
   })
-  
+
   const upload = multer({ storage: storage })
 // Multer configuration for file upload
 // const upload = multer({ dest: "uploads/" });

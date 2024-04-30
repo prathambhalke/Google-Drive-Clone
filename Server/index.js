@@ -7,6 +7,7 @@ const userRoute = require("./Routes/userRoute");
 const fileRoute = require("./Routes/fileRoute");
 const { restrictUserLogin } = require("./Middlewares/auth");
 const PORT = process.env.PORT;
+const path = require("path");
 require("./DataBase/DB");
 app.use(express.json());
 
@@ -18,7 +19,9 @@ app.use(
   })
 );
 app.use(cookieParser());
-
+// Serve static files from the "uploads" directory
+const dd = express.static(path.join(__dirname, "./uploads"));
+app.use("/uploads", dd);
 // app.use("/user",restrictUserLogin, userRoute);
 app.use("/user", userRoute);
 app.use("/upload", fileRoute);
