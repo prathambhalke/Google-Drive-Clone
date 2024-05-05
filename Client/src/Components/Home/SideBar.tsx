@@ -8,13 +8,16 @@ import { MdUploadFile } from "react-icons/md";
 import FileContent from "../FileContent";
 import CreateFolder from "../Popups/CreateFolder";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 const SideBar = () => {
-  const [activeTab, setActiveTab] = useState("myDrive");
+  const [activeTab, setActiveTab] = useState("My Drive");
   const [newSelectVisible, setNewSelectVisible] = useState<boolean>(false);
   const [createFolderVisible, setCreateFolderVisible] =
     useState<boolean>(false);
-  const [fileData, setFileData] = useState("");
-  const Ref = useRef(null);
+  const [fileData, setFileData] = useState<File | null>(null); // Updated state to hold File object
+  const Ref = useRef<HTMLInputElement>(null);
+
   const changeTab = (tabName: any) => {
     setActiveTab(tabName);
   };
@@ -22,35 +25,38 @@ const SideBar = () => {
   const handleNewSelectClick = () => {
     setNewSelectVisible(!newSelectVisible);
   };
-  const onFileUpload = () => {
-    Ref.current.click();
-  };
 
-  const onFolderUpload = () => {
-    setCreateFolderVisible(!createFolderVisible);
-  };
-  const onfileSelect = (e: any) => {
+  const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Set the file data to the selected file
-    setFileData(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      setFileData(e.target.files[0]);
+      // Automatically trigger file upload upon selection
+      onUploadClick(e.target.files[0]);
+      setNewSelectVisible(false)
+
+    }
   };
 
-  const onUploadClick = (e: any) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    const formData = new FormData()
-    formData.append("fileData", fileData);
+  const onUploadClick = (file: File) => {
+    const formData = new FormData();
+    formData.append("fileData", file);
 
     axios
       .post("http://localhost:5002/upload/fileUpload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
-      .then((res) => console.log("res", res))
+      .then((res) => {
+        toast.success(`${file.name}\nuploaded successfully! 📄`);
+        console.log("res", res);
+      })
       .catch((err) => console.log("err", err));
   };
+
   // Array of buttons
   const buttons = [
-    { icon: <FaGoogleDrive />, label: "My Drive", tab: "myDrive" },
-    { icon: <FaRegStar />, label: "Starred", tab: "starred" },
-    { icon: <RiDeleteBin6Line />, label: "Bin", tab: "bin" },
+    { icon: <FaGoogleDrive />, label: "My Drive", tab: "My Drive" },
+    { icon: <FaRegStar />, label: "Starred", tab: "Starred" },
+    { icon: <RiDeleteBin6Line />, label: "Bin", tab: "Bin for My Drive" },
   ];
 
   return (
@@ -59,37 +65,29 @@ const SideBar = () => {
       <div className="flex flex-col w-36 bg-transparent mx-14 mt-2 relative">
         <div>
           {newSelectVisible && (
-            <div className="absolute items-center top-1 left-10 min-w-72 bg-white shadow-lg rounded-lg py-4">
+            <div className="absolute items-center top-1 left-10 min-w-72 bg-white shadow-lg rounded-lg py-4 z-20">
               <button
                 className="flex items-center w-full py-2 mb-2 border-b-2 hover:bg-gray-200"
-                onClick={onFolderUpload}
+                onClick={handleNewSelectClick}
               >
                 <MdOutlineCreateNewFolder size={24} className="mx-4" />
                 New Folder
               </button>
-              <button
-                className="flex items-center w-full py-2 hover:bg-gray-200"
-                onClick={onFileUpload}
+              <label
+                htmlFor="fileupload" // Add htmlFor to associate label with file input
+                className="flex items-center w-full py-2 hover:bg-gray-200 cursor-pointer" // Add cursor pointer for better UX
               >
                 <MdUploadFile size={24} className="mx-4" />
                 File Upload
-              </button>
-              <form onSubmit={onUploadClick}>
-                <input
-                  type="file"
-                  name="fileupload"
-                  ref={Ref}
-                  id="fileupload"
-                  hidden
-                  onChange={onfileSelect}
-                />
-                <button
-                  type="submit"
-                  className="flex items-center w-full py-2 hover:bg-gray-200"
-                >
-                  upload
-                </button>
-              </form>
+              </label>
+              <input
+                type="file"
+                name="fileupload"
+                id="fileupload"
+                ref={Ref}
+                hidden
+                onChange={onFileSelect} // Call onFileSelect on file change
+              />
             </div>
           )}
           <button
@@ -109,7 +107,10 @@ const SideBar = () => {
                   ? "bg-blue-500 text-white"
                   : "bg-white border hover:bg-gray-100"
               }`}
-              onClick={() => changeTab(button.tab)}
+              onClick={() => {
+                changeTab(button.tab);
+                setNewSelectVisible(false)
+              }}
             >
               <span className="mr-2">{button.icon}</span> {button.label}
             </button>

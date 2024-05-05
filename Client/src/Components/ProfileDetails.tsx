@@ -8,7 +8,7 @@ const ProfileDetails = ({ mail, photo, name }: any) => {
     toast.success("SignOut SuccessFully!");
    };
   return (
-    <div className="flex flex-col items-center p-6 border border-gray-300 rounded-lg shadow-lg absolute right-5">
+    <div className="flex flex-col items-center p-6 border border-gray-300 rounded-lg shadow-lg absolute right-5 z-20">
       <p className="font-semibold text-2xl mb-4">{name}</p>
       <img
         src={photo}

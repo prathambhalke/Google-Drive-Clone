@@ -6,4 +6,4 @@ export {default as Header} from "./Header"
 export {default as FileContent} from "./FileContent"
 export {default as CreateFolder} from "./Popups/CreateFolder"
 export {default as ProfileDetails} from "./ProfileDetails"
-
+export {default as MoreOptionPopup} from "./Popups/MoreOptionPopup"
