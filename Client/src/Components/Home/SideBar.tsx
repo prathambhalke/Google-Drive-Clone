@@ -25,6 +25,9 @@ const SideBar = () => {
   const handleNewSelectClick = () => {
     setNewSelectVisible(!newSelectVisible);
   };
+  const handleFolderVisible = () => {
+    setCreateFolderVisible(true);
+  };
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Set the file data to the selected file
@@ -32,8 +35,7 @@ const SideBar = () => {
       setFileData(e.target.files[0]);
       // Automatically trigger file upload upon selection
       onUploadClick(e.target.files[0]);
-      setNewSelectVisible(false)
-
+      setNewSelectVisible(false);
     }
   };
 
@@ -68,7 +70,7 @@ const SideBar = () => {
             <div className="absolute items-center top-1 left-10 min-w-72 bg-white shadow-lg rounded-lg py-4 z-20">
               <button
                 className="flex items-center w-full py-2 mb-2 border-b-2 hover:bg-gray-200"
-                onClick={handleNewSelectClick}
+                onClick={handleFolderVisible}
               >
                 <MdOutlineCreateNewFolder size={24} className="mx-4" />
                 New Folder
@@ -109,7 +111,7 @@ const SideBar = () => {
               }`}
               onClick={() => {
                 changeTab(button.tab);
-                setNewSelectVisible(false)
+                setNewSelectVisible(false);
               }}
             >
               <span className="mr-2">{button.icon}</span> {button.label}
