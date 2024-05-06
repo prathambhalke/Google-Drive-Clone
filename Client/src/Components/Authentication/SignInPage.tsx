@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { USERLOGIN } from "../../../constants/api";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const SignInPage = () => {
 
     // Make API call to login
     axios
-      .post("http://localhost:5002/user/login", { email, password })
+      .post(USERLOGIN, { email, password })
       .then((res) => {
         toast.success("Login SuccessFully🚀!");
         // Redirect to dashboard or any other page upon successful login

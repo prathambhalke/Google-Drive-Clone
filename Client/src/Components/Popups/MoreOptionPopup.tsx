@@ -1,6 +1,7 @@
 import { FaRegStar } from "react-icons/fa";
 import { MdZoomOutMap } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { REDIRECTFILE } from "../../../constants/api";
 
 const MoreOptionPopup = ({ visiblePopupIndex, index, file }: any) => {
   return (
@@ -8,7 +9,7 @@ const MoreOptionPopup = ({ visiblePopupIndex, index, file }: any) => {
       {visiblePopupIndex === index && (
         <div className="file-popup absolute top-12 right-0 w-40 bg-white shadow-xl border border-gray-300 rounded-lg">
           <a
-            href={`http://localhost:5002/uploads/${file.fileData}`}
+            href={`${REDIRECTFILE}/${file.fileData}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center hover:text-blue-500"

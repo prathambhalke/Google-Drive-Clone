@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { USERSIGNUP } from "../../../constants/api";
 
 const SignupPage = () => {
   const [name, setName] = useState("");
@@ -15,7 +16,7 @@ const SignupPage = () => {
   const handleSignup = (e: any) => {
     e.preventDefault();
     axios
-      .post("http://localhost:5002/user", { name, email, password })
+      .post(USERSIGNUP, { name, email, password })
       .then((res) => {
         toast.success("SignUp Successfully✅!");
         Navigate("/signin");
