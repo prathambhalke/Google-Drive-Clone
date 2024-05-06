@@ -26,4 +26,12 @@ async function handleUserLogin(req, res) {
   return res.status(204).json(`${email} Login SuccessFully🚀!`);
 }
 
-module.exports = { handleUserSignUp, handleUserLogin};
+async function getUsers(req,res) {
+  try {
+    return User.find({}).then(data => res.json({status : "OK✅" , "allUsersData" : data}))
+  } catch (error) {
+    res.send({status : "Error while fetching users🔴"})
+  }
+}
+
+module.exports = { handleUserSignUp, handleUserLogin, getUsers};
