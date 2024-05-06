@@ -6,3 +6,5 @@ export const UPLOADFILEDATA = "https://google-drive-clone-v1-git-main-prathamesh
 export const USERLOGIN = "https://google-drive-clone-v1-git-main-prathameshbhalkes-projects.vercel.app/user/login";
 
 export const USERSIGNUP = "https://google-drive-clone-v1-git-main-prathameshbhalkes-projects.vercel.app/user";
+
+export const GETUSERS = "http://localhost:5002/user/getUsers"

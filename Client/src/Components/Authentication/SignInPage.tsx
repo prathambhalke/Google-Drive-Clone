@@ -1,13 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { USERLOGIN } from "../../../constants/api";
+import { globalContextProvider } from "../../Context/GlobalContext";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { filesDataArray, setFilesDataArray } = useContext(
+    globalContextProvider
+  );
 
   const handleEmailChange = (e: any) => setEmail(e.target.value);
   const handlePasswordChange = (e: any) => setPassword(e.target.value);
@@ -20,7 +24,10 @@ const SignInPage = () => {
       .post(USERLOGIN, { email, password })
       .then((res) => {
         toast.success("Login SuccessFully🚀!");
-        // Redirect to dashboard or any other page upon successful login
+        setFilesDataArray({
+          ...filesDataArray,
+          currentUser: { ...filesDataArray.currentUser, email: email },
+        });
         navigate("/");
       })
       .catch((err) => {

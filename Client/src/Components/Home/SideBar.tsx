@@ -62,7 +62,7 @@ const SideBar = () => {
   ];
 
   return (
-    <div className="flex h-[88vh] pb-3">
+    <div className="flex pb-3 justify-center">
       {/* Sidebar */}
       <div className="flex flex-col w-36 bg-transparent mx-14 mt-2 relative">
         <div>
