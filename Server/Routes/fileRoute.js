@@ -1,5 +1,5 @@
 const express = require("express");
-const { handleFileUpload, getFileData } = require("../Controllers/files");
+const { handleFileUpload, getFileData, getBinFileData,handleBinUpload } = require("../Controllers/files");
 const multer = require("multer");
 const router = express.Router();
 
@@ -19,4 +19,7 @@ const storage = multer.diskStorage({
 
 router.get("/getFileData",getFileData)
 router.post("/fileUpload",upload.single('fileData'), handleFileUpload)
+router.get("/getBinFileData",getBinFileData)
+router.post("/handleBinUpload",upload.single('binFileData'), handleBinUpload)
+
 module.exports = router;
