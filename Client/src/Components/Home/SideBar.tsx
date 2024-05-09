@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { FaRegStar } from "react-icons/fa";
 import { FaGoogleDrive } from "react-icons/fa";
@@ -9,6 +9,7 @@ import FileContent from "../FileContent";
 import CreateFolder from "../Popups/CreateFolder";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { globalContextProvider } from "../../Context/GlobalContext";
 
 const SideBar = () => {
   const [activeTab, setActiveTab] = useState("My Drive");
@@ -17,11 +18,13 @@ const SideBar = () => {
     useState<boolean>(false);
   const [fileData, setFileData] = useState<File | null>(null); // Updated state to hold File object
   const Ref = useRef<HTMLInputElement>(null);
-
+  const { filesDataArray, setFilesDataArray } = useContext(
+    globalContextProvider
+  );
   const changeTab = (tabName: any) => {
     setActiveTab(tabName);
+    setFilesDataArray({ ...filesDataArray, currentActiveTab: tabName });
   };
-
   const handleNewSelectClick = () => {
     setNewSelectVisible(!newSelectVisible);
   };

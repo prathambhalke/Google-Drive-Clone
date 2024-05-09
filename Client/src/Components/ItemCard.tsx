@@ -30,7 +30,7 @@ const ItemCard = ({file,id, togglePopupVisibility, visiblePopupIndex} : any) => 
       />
     </div>
     <div className="flex justify-center items-center overflow-hidden">
-      {file.fileData.endsWith(".pdf") ? (
+      {file?.fileData?.endsWith(".pdf") ? (
         <a
           href={`http://localhost:5002/uploads/${file.fileData}`}
           target="_blank"

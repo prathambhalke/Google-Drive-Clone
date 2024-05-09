@@ -20,6 +20,19 @@ const addToBinDataSchema = mongoose.Schema(
     collection: "binFiles",
   }
 );
+
+const addToStarredDataSchema = mongoose.Schema(
+  {
+    fileData: String,
+    origFileName: String,
+  },
+  {
+    collection: "starredFiles",
+  }
+);
+
 mongoose.model("fileDetails", filesUploadDataSchema);
 
 mongoose.model("binFiles", addToBinDataSchema);
+
+mongoose.model("starredFiles", addToStarredDataSchema);

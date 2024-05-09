@@ -1,7 +1,13 @@
 import { FaRegStar } from "react-icons/fa";
 import { MdZoomOutMap } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { REDIRECTFILE, UPLOADBINFILEDATA } from "../../../constants/api";
+import { MdOutlineRestore } from "react-icons/md";
+import {
+  DELETESELECTEDBINFILEDATA,
+  REDIRECTFILE,
+  UPLOADBINFILEDATA,
+  UPLOADSTARREDFILEDATA,
+} from "../../../constants/api";
 import axios from "axios";
 import { globalContextProvider } from "../../Context/GlobalContext";
 import { useContext } from "react";
@@ -17,47 +23,107 @@ const MoreOptionPopup = ({
     globalContextProvider
   );
 
+  const foundRequiredFile = filesDataArray.filesData.filter(
+    (item: any) => item._id === UniqueFileID
+  );
+
   const uploadBinFile = async () => {
-    const findfile = filesDataArray.filesData.filter(
-      (item) => item._id === UniqueFileID
-    );
-    console.log(...findfile);
     axios
-      .post(UPLOADBINFILEDATA, ...findfile)
+      .post(UPLOADBINFILEDATA, ...foundRequiredFile)
       .then((res) => {
         toast.dark(
-          `${findfile[0].origFileName}\nadded to Bin successfully! 📄`
+          `${foundRequiredFile[0].origFileName}\nadded to Bin successfully! 📄`
         );
         console.log("res", res);
       })
-      .catch((err) =>
-        console.log("err", console.log("findfile 📂📂", findfile))
-      );
+      .catch((err) => {
+        toast.error("failed to add to bin");
+        console.log(err);
+      });
   };
 
+  const uploadStarredFile = async () => {
+    axios
+      .post(UPLOADSTARREDFILEDATA, ...foundRequiredFile)
+      .then((res) => {
+        toast.dark(
+          `${foundRequiredFile[0].origFileName}\nadded to Starred successfully! 📄`
+        );
+        console.log("res", res);
+      })
+      .catch((err) => {
+        toast.info("failed to add to Starred");
+        console.log(err);
+      });
+  };
+
+  const deleteBinFile = (UniqueFileID : number) => {
+    axios.delete(DELETESELECTEDBINFILEDATA, { data: { selectedFileIds: UniqueFileID } })
+      .then((res) => {
+        toast.dark("File deleted from bin successfully");
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error("Failed to delete file from bin");
+        console.log(err);
+      });
+  };
+  const { currentActiveTab } = filesDataArray;
   return (
     <>
       {visiblePopupIndex === index && (
         <div className="file-popup absolute top-12 right-0 w-40 bg-white shadow-xl border border-gray-300 rounded-lg">
-          <a
-            href={`${REDIRECTFILE}/${file.fileData}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center hover:text-blue-500"
-          >
-            <button className="flex items-center  pl-3 w-full py-1 mb-1 border-b-2 hover:bg-gray-200">
-              <MdZoomOutMap size={20} className="mr-2" /> Open File
+          {currentActiveTab !== "Bin for My Drive" && (
+            <a
+              href={`${REDIRECTFILE}/${file.fileData}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center hover:text-blue-500"
+            >
+              <button className="flex items-center  pl-3 w-full py-1 mb-1 border-b-2 hover:bg-gray-200">
+                <MdZoomOutMap size={20} className="mr-2" /> Open File
+              </button>
+            </a>
+          )}
+
+          {currentActiveTab === "Starred" ? (
+            <button
+              className="flex items-center  pl-3 w-full py-1 hover:bg-gray-200 border-b-2 hover:text-yellow-500"
+              onClick={uploadStarredFile}
+            >
+              <FaRegStar size={20} className="mr-2" /> Remove from Starred
             </button>
-          </a>
-          <button className="flex items-center  pl-3 w-full py-1 hover:bg-gray-200 border-b-2 hover:text-yellow-500">
-            <FaRegStar size={20} className="mr-2" /> Add to Starred
-          </button>
-          <button
-            className="flex items-center  pl-3 w-full py-1 mb-1 hover:bg-gray-200 hover:text-red-500"
-            onClick={uploadBinFile}
-          >
-            <RiDeleteBin6Line size={20} className="mr-2" /> Move to Bin
-          </button>
+          ) : currentActiveTab === "Bin for My Drive" ? (
+            <button
+              className="flex items-center  pl-3 w-full py-1 hover:bg-gray-200 border-b-2 hover:text-yellow-500"
+              onClick={uploadStarredFile}
+            >
+              <MdOutlineRestore size={20} className="mr-2" /> Restore
+            </button>
+          ) : (
+            <button
+              className="flex items-center  pl-3 w-full py-1 hover:bg-gray-200 border-b-2 hover:text-yellow-500"
+              onClick={uploadStarredFile}
+            >
+              <FaRegStar size={20} className="mr-2" /> Add to Starred
+            </button>
+          )}
+
+          {currentActiveTab === "Bin for My Drive" ? (
+            <button
+              className="flex items-center  pl-3 w-full py-1 mb-1 hover:bg-gray-200 hover:text-red-500"
+              onClick={() => deleteBinFile(UniqueFileID)}
+            >
+              <RiDeleteBin6Line size={20} className="mr-2" /> Delete forever
+            </button>
+          ) : (
+            <button
+              className="flex items-center  pl-3 w-full py-1 mb-1 hover:bg-gray-200 hover:text-red-500"
+              onClick={uploadBinFile}
+            >
+              <RiDeleteBin6Line size={20} className="mr-2" /> Add to Bin
+            </button>
+          )}
         </div>
       )}
     </>

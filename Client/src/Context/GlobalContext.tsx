@@ -10,6 +10,7 @@ const GlobalStateManagement = {
     userName: "",
     email: "",
   },
+  currentActiveTab : ""
 };
 const GlobalContext = ({ children }: any) => {
   const [filesDataArray, setFilesDataArray] = useState(GlobalStateManagement);

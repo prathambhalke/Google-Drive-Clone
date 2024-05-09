@@ -2,7 +2,16 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { ItemCard } from "./index";
 import { globalContextProvider } from "../Context/GlobalContext";
-import { GETBINFILEDATA, GETUSERS } from "../../constants/api";
+import addtobin from "../../public/Images/addtobin.svg";
+import addtoStarred from "../../public/Images/addtostarred.svg";
+import addtodrive from "../../public/Images/addtodrive.svg";
+
+import {
+  DELETEBINFILEDATA,
+  GETBINFILEDATA,
+  GETSTARREDFILEDATA,
+  GETUSERS,
+} from "../../constants/api";
 import { toast } from "react-toastify";
 
 const FileContent = ({ activeTab }: any) => {
@@ -10,6 +19,7 @@ const FileContent = ({ activeTab }: any) => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [binFiles, setBinFiles] = useState([]);
+  const [starredFiles, setStarredFiles] = useState([]);
   const [visiblePopupIndex, setVisiblePopupIndex] = useState<number | null>(
     null
   );
@@ -22,7 +32,9 @@ const FileContent = ({ activeTab }: any) => {
   const fetchData = () => {
     axios
       .get("http://localhost:5002/upload/getFileData")
-      .then((res) => setFiles(res.data.data.reverse()))
+      .then((res) => {
+        setFiles(res.data.data.reverse());
+      })
       .catch((err) => setError(err.message));
   };
   const fetchBinData = async () => {
@@ -35,6 +47,18 @@ const FileContent = ({ activeTab }: any) => {
       console.error("Error fetching bin data:", error);
     }
   };
+
+  const fetchStarredData = async () => {
+    try {
+      const response = await axios.get(GETSTARREDFILEDATA);
+      const starredData = response.data.data;
+      setStarredFiles(starredData);
+    } catch (error) {
+      toast.error("Error fetching Starred data⚠️");
+      console.error("Error fetching Starred data:", error);
+    }
+  };
+
   const fetchUsers = () => {
     axios
       .get(GETUSERS)
@@ -43,10 +67,21 @@ const FileContent = ({ activeTab }: any) => {
       })
       .catch((err) => err);
   };
+
+  const deleteAllBinFiles = () => {
+    axios
+      .delete(DELETEBINFILEDATA)
+      .then((res) => toast.success("Bin files deleted"))
+      .catch((err) => {
+        console.error("Error deleting bin files:", err);
+        toast.error("Error deleting bin files");
+      });
+  };
   useEffect(() => {
     fetchData();
     fetchUsers();
     fetchBinData();
+    fetchStarredData();
   }, []);
 
   useEffect(() => {
@@ -60,7 +95,6 @@ const FileContent = ({ activeTab }: any) => {
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;
   }
-
   return (
     <div className="relative flex flex-col w-3/4 h-[90vh] bg-white rounded-xl p-4 overflow-y-auto custom-scrollbar mt-1">
       <div className="flex justify-between">
@@ -68,35 +102,82 @@ const FileContent = ({ activeTab }: any) => {
           {activeTab}
         </h2>
         {activeTab === "Bin for My Drive" && (
-          <button className="bg-red-500 text-white font-bold font-mono p-2 rounded-lg">
+          <button
+            className="bg-red-500 text-white font-bold font-mono p-2 rounded-lg"
+            onClick={deleteAllBinFiles}
+          >
             Empty Bin
           </button>
         )}
       </div>
       {activeTab === "My Drive" && (
-        <div className="flex flex-wrap justify-evenly">
-          {files.map((file, index) => (
-            <ItemCard
-              file={file}
-              id={index}
-              visiblePopupIndex={visiblePopupIndex}
-              togglePopupVisibility={togglePopupVisibility}
-            />
-          ))}
-        </div>
+        <>
+          {files.length > 0 ? (
+            <div className="flex flex-wrap justify-evenly">
+              {files.map((file, index) => (
+                <ItemCard
+                  file={file}
+                  id={index}
+                  visiblePopupIndex={visiblePopupIndex}
+                  togglePopupVisibility={togglePopupVisibility}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-evenly flex-col items-center  h-[80vh]">
+              <p className="text-4xl font-mono font-bold text-blue-300 mb-12">
+                Drive is Empty
+              </p>
+              <img src={addtodrive} alt="Add to drive" className="w-1/6" />
+            </div>
+          )}
+        </>
       )}
-      {activeTab === "Starred" && <h1>Starred</h1>}
+      {activeTab === "Starred" && (
+        <>
+          {starredFiles.length > 0 ? (
+            <div className="flex flex-wrap justify-evenly">
+              {starredFiles.map((file, index) => (
+                <ItemCard
+                  file={file}
+                  id={index}
+                  visiblePopupIndex={visiblePopupIndex}
+                  togglePopupVisibility={togglePopupVisibility}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center flex-col items-center  h-[80vh]">
+              <p className="text-4xl font-mono font-bold text-yellow-300 mb-12">
+                Starred is Empty
+              </p>
+              <img src={addtoStarred} alt="Add to Starred" className="w-1/6" />
+            </div>
+          )}
+        </>
+      )}
       {activeTab === "Bin for My Drive" && (
-        <div className="flex flex-wrap justify-evenly">
-          {binFiles.map((file, index) => (
-            <ItemCard
-              file={file}
-              id={index}
-              visiblePopupIndex={visiblePopupIndex}
-              togglePopupVisibility={togglePopupVisibility}
-            />
-          ))}
-        </div>
+        <>
+          {binFiles.length > 0 ? (
+            <div className="flex flex-wrap justify-evenly">
+              {binFiles.map((file, index) => (
+                <ItemCard
+                  file={file}
+                  id={index}
+                  visiblePopupIndex={visiblePopupIndex}
+                  togglePopupVisibility={togglePopupVisibility}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center flex-col items-center  h-[80vh]">
+              <p className="text-4xl font-mono font-bold text-red-300 mb-12">
+                Bin is Empty
+              </p>
+              <img src={addtobin} alt="Add to Bin" className="w-1/4" />
+            </div>
+          )}
+        </>
       )}
     </div>
   );
