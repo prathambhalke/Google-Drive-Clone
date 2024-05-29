@@ -4,7 +4,6 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineRestore } from "react-icons/md";
 import {
   DELETESELECTEDBINFILEDATA,
-  REDIRECTFILE,
   UPLOADBINFILEDATA,
   UPLOADSTARREDFILEDATA,
 } from "../../../constants/api";
@@ -75,7 +74,7 @@ const MoreOptionPopup = ({
         <div className="file-popup absolute top-12 right-0 w-40 bg-white shadow-xl border border-gray-300 rounded-lg">
           {currentActiveTab !== "Bin for My Drive" && (
             <a
-              href={`${REDIRECTFILE}/${file.fileData}`}
+              href={file.fileData}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center hover:text-blue-500"

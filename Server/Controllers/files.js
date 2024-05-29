@@ -1,89 +1,108 @@
 const { default: mongoose } = require("mongoose");
-
+const { uploadToCloudinary } = require('../Services/cloudinary')
+const cloudinary = require("../Services/cloudinary") 
 require("../Models/filesUploadData");
+
 const file = mongoose.model("fileDetails");
 const BinFiles = mongoose.model("binFiles");
 const StarredFiles = mongoose.model("starredFiles");
 
-
 async function handleFileUpload(req, res) {
-  const fileD = req.file.filename;
-  const oriFileName = req.file.originalname;
+  const fileUrl = req.body.imageBase64;
+  const origFileName = req.body.origFileName;
+
   try {
-    let newFile = await file.create({
-      fileData: fileD,
-      origFileName: oriFileName,
+    // Check if the file already exists in the database
+    const existingFile = await file.findOne({ origFileName: origFileName });
+    if (existingFile) {
+      return res.json({
+        status: "exists",
+        message: "File already exists",
+        file: existingFile,
+        isExist : true
+      });
+    }
+
+    cloudinary.uploader.upload(fileUrl, async function (err, result) {
+      if (err) {
+        console.error("Cloudinary Upload Error:", err);
+        return res.status(500).json({
+          success: false,
+          message: "Error uploading to Cloudinary",
+          error: err.message,
+        });
+      }
+
+      let newFile = await file.create({
+        fileData: result.url,
+        origFileName: origFileName,
+      });
+      await newFile.save();
+
+      return res.json({ status: "OK🟩", file: newFile });
     });
-    newFile.save();
-    return res.json({ status: "OK🟩" });
   } catch (err) {
-    res.json({ status: "error🔴", error: err });
+    console.error("Error handling file upload:", err);
+    res.status(500).json({ status: "error🔴", error: err.message });
   }
 }
 
 async function getFileData(req, res) {
   try {
-    file.find({}).then((data) => {
-      res.send({ status: "OK🟩", data: data });
-    });
+    const data = await file.find({});
+    res.send({ status: "OK🟩", data: data });
   } catch (error) {
-    res.send({ status: "Error🔴" });
+    res.send({ status: "Error🔴", error: error.message });
   }
 }
 
 async function handleBinUpload(req, res) {
-  const BinFilesData = req.body.fileData;
-  const oriBinFileName = req.body.origFileName;
+  const { fileData, origFileName } = req.body;
 
   try {
     let newBinFile = await BinFiles.create({
-      fileData: BinFilesData,
-      origFileName: oriBinFileName,
+      fileData: fileData,
+      origFileName: origFileName,
     });
-    
-    newBinFile.save();
-    await file.deleteOne({ fileData: BinFilesData });
+    await newBinFile.save();
+    await file.deleteOne({ fileData: fileData });
 
     return res.json({ status: "OK✅ for handling Bin" });
   } catch (err) {
-    res.json({ status: "error🔴 for handling Bin", error: err });
+    res.json({ status: "error🔴 for handling Bin", error: err.message });
   }
 }
 
 async function getBinFileData(req, res) {
   try {
-    BinFiles.find({}).then((data) => {
-      res.send({ status: "OK🟩", data: data });
-    });
+    const data = await BinFiles.find({});
+    res.send({ status: "OK🟩", data: data });
   } catch (error) {
-    res.send({ status: "Error🔴" });
+    res.send({ status: "Error🔴", error: error.message });
   }
 }
 
 async function handleStarredUpload(req, res) {
-  const StarredFilesData = req.body.fileData;
-  const oriStarredFileName = req.body.origFileName;
+  const { fileData, origFileName } = req.body;
 
   try {
     let newStarredFile = await StarredFiles.create({
-      fileData: StarredFilesData,
-      origFileName: oriStarredFileName,
+      fileData: fileData,
+      origFileName: origFileName,
     });
-    newStarredFile.save();
-    console.log("found the StarredFiles data🔍🔍🔍🔍", newStarredFile );
+    await newStarredFile.save();
     return res.json({ status: "OK✅ for handling Bin" });
   } catch (err) {
-    res.json({ status: "error🔴 for handling Bin", error: err });
+    res.json({ status: "error🔴 for handling Bin", error: err.message });
   }
 }
 
 async function getStarredFileData(req, res) {
   try {
-    StarredFiles.find({}).then((data) => {
-      res.send({ status: "OK🟩", data: data });
-    });
+    const data = await StarredFiles.find({});
+    res.send({ status: "OK🟩", data: data });
   } catch (error) {
-    res.send({ status: "Error🔴" });
+    res.send({ status: "Error🔴", error: error.message });
   }
 }
 
@@ -92,18 +111,18 @@ async function deleteAllBinFiles(req, res) {
     await BinFiles.deleteMany({});
     return res.json({ status: "OK✅ All bin files deleted" });
   } catch (error) {
-    return res.json({ status: "Error🔴", error: error });
+    return res.json({ status: "Error🔴", error: error.message });
   }
 }
 
 async function deleteSelectedBinFiles(req, res) {
-  const selectedFileIds = req.body.selectedFileIds;
-console.log(selectedFileIds)
+  const { selectedFileIds } = req.body;
+
   try {
     await BinFiles.deleteMany({ _id: { $in: selectedFileIds } });
     return res.json({ status: "OK✅ Selected bin files deleted" });
   } catch (error) {
-    return res.json({ status: "Error🔴", error: error });
+    return res.json({ status: "Error🔴", error: error.message });
   }
 }
 
@@ -115,5 +134,5 @@ module.exports = {
   handleStarredUpload,
   getStarredFileData,
   deleteAllBinFiles,
-  deleteSelectedBinFiles
+  deleteSelectedBinFiles,
 };

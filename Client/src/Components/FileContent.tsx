@@ -34,6 +34,7 @@ const FileContent = ({ activeTab }: any) => {
       .get("http://localhost:5002/upload/getFileData")
       .then((res) => {
         setFiles(res.data.data.reverse());
+        console.log(res.data)
       })
       .catch((err) => setError(err.message));
   };
@@ -95,6 +96,7 @@ const FileContent = ({ activeTab }: any) => {
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;
   }
+  console.log(files)
   return (
     <div className="relative flex flex-col w-3/4 h-[90vh] bg-white rounded-xl p-4 overflow-y-auto custom-scrollbar mt-1">
       <div className="flex justify-between">

@@ -14,44 +14,54 @@ import { globalContextProvider } from "../../Context/GlobalContext";
 const SideBar = () => {
   const [activeTab, setActiveTab] = useState("My Drive");
   const [newSelectVisible, setNewSelectVisible] = useState<boolean>(false);
-  const [createFolderVisible, setCreateFolderVisible] =
-    useState<boolean>(false);
-  const [fileData, setFileData] = useState<File | null>(null); // Updated state to hold File object
+  const [createFolderVisible, setCreateFolderVisible] = useState<boolean>(false);
+  const [fileData, setFileData] = useState<File | null>(null);
+  const [imageBase64, setImageBase64] = useState("");
+
   const Ref = useRef<HTMLInputElement>(null);
-  const { filesDataArray, setFilesDataArray } = useContext(
-    globalContextProvider
-  );
+  const { filesDataArray, setFilesDataArray } = useContext(globalContextProvider);
+
   const changeTab = (tabName: any) => {
     setActiveTab(tabName);
     setFilesDataArray({ ...filesDataArray, currentActiveTab: tabName });
   };
+
   const handleNewSelectClick = () => {
     setNewSelectVisible(!newSelectVisible);
   };
+
   const handleFolderVisible = () => {
     setCreateFolderVisible(true);
   };
 
+  // Convert image file to base64
+  const setFileToBase64 = (file: File) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setImageBase64(base64String);
+      onUploadClick(file, base64String);  // Call upload click with the base64 string
+    };
+  };
+
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Set the file data to the selected file
+    let file = e.target.files[0];
     if (e.target.files && e.target.files.length > 0) {
-      setFileData(e.target.files[0]);
-      // Automatically trigger file upload upon selection
-      onUploadClick(e.target.files[0]);
+      setFileData(file);
+      setFileToBase64(file);
       setNewSelectVisible(false);
     }
   };
 
-  const onUploadClick = (file: File) => {
-    const formData = new FormData();
-    formData.append("fileData", file);
-
+  const onUploadClick = (file: File, base64String: string) => {
     axios
-      .post("http://localhost:5002/upload/fileUpload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      .post("http://localhost:5002/upload/fileUpload", { imageBase64: base64String, origFileName: file.name }, {
+        headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
-        toast.success(`${file.name}\nuploaded successfully! 📄`);
+        if (res.data.isExist) toast.success(`${file.name} already exists`);
+        else toast.success(`${file.name}\nuploaded successfully! 📄`);
         console.log("res", res);
       })
       .catch((err) => console.log("err", err));

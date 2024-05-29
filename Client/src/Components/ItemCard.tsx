@@ -4,6 +4,7 @@ import { MdImageNotSupported } from "react-icons/md";
 import MoreOptionPopup from "./Popups/MoreOptionPopup";
 
 const ItemCard = ({file,id, togglePopupVisibility, visiblePopupIndex} : any) => {
+  console.log(file)
   return (
     <div
     className="file-card w-[20%] h-56 p-2 rounded-lg bg-blue-50 border border-gray-200 shadow-sm mx-2 my-4 flex flex-col relative hover:bg-gray-100 transform transition-transform duration-300 hover:scale-105"
@@ -30,25 +31,25 @@ const ItemCard = ({file,id, togglePopupVisibility, visiblePopupIndex} : any) => 
       />
     </div>
     <div className="flex justify-center items-center overflow-hidden">
-      {file?.fileData?.endsWith(".pdf") ? (
+      {file?.origFileName?.endsWith(".pdf") ? (
         <a
-          href={`http://localhost:5002/uploads/${file.fileData}`}
+          href={file.fileData}
           target="_blank"
           title="Click to Open the PDF"
         >
           <FaFilePdf size={100} className="mr-2 text-red-500" />
         </a>
-      ) : file.fileData.endsWith(".jpeg") ||
-        file.fileData.endsWith(".jpg") ||
-        file.fileData.endsWith(".png") ? (
+      ) : file?.origFileName?.endsWith(".jpeg") ||
+        file?.origFileName?.endsWith(".jpg") ||
+        file?.origFileName?.endsWith(".png") ? (
         <a
-          href={`http://localhost:5002/uploads/${file.fileData}`}
+          href={file.fileData}
           target="_blank"
           title="Click to Open the Image"
         >
           <img
             className="w-full h-full object-cover"
-            src={`http://localhost:5002/uploads/${file.fileData}`}
+            src={file.fileData}
             alt="Your Image"
           />
         </a>
