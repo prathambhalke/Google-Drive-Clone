@@ -4,6 +4,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdOutlineRestore } from "react-icons/md";
 import {
   DELETESELECTEDBINFILEDATA,
+  REMOVESTARREDFILEDATA,
+  RESTOREFILE,
   UPLOADBINFILEDATA,
   UPLOADSTARREDFILEDATA,
 } from "../../../constants/api";
@@ -56,8 +58,11 @@ const MoreOptionPopup = ({
       });
   };
 
-  const deleteBinFile = (UniqueFileID : number) => {
-    axios.delete(DELETESELECTEDBINFILEDATA, { data: { selectedFileIds: UniqueFileID } })
+  const deleteBinFile = (UniqueFileID: number) => {
+    axios
+      .delete(DELETESELECTEDBINFILEDATA, {
+        data: { selectedFileIds: UniqueFileID },
+      })
       .then((res) => {
         toast.dark("File deleted from bin successfully");
         console.log(res);
@@ -67,6 +72,36 @@ const MoreOptionPopup = ({
         console.log(err);
       });
   };
+
+  const removeStarredFile = (UniqueFileID: number) => {
+    console.log(UniqueFileID);
+    axios
+      .delete(REMOVESTARREDFILEDATA, {
+        data: { selectedFileIds: UniqueFileID },
+      })
+      .then((res) => {
+        toast.dark("removed from Starred");
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error("Failed to delete file from bin");
+        console.log(err);
+      });
+  };
+
+  const RestoreFile = (UniqueFileID: number) => {
+    axios
+      .post(RESTOREFILE, { data: { selectedFileIds: UniqueFileID } })
+      .then((res) => {
+        toast.dark("File Restored successfully");
+        console.log(res);
+      })
+      .catch((err) => {
+        toast.error("Failed to Restore File");
+        console.log(err);
+      });
+  };
+
   const { currentActiveTab } = filesDataArray;
   return (
     <>
@@ -88,14 +123,14 @@ const MoreOptionPopup = ({
           {currentActiveTab === "Starred" ? (
             <button
               className="flex items-center  pl-3 w-full py-1 hover:bg-gray-200 border-b-2 hover:text-yellow-500"
-              onClick={uploadStarredFile}
+              onClick={() => removeStarredFile(UniqueFileID)}
             >
               <FaRegStar size={20} className="mr-2" /> Remove from Starred
             </button>
           ) : currentActiveTab === "Bin for My Drive" ? (
             <button
               className="flex items-center  pl-3 w-full py-1 hover:bg-gray-200 border-b-2 hover:text-yellow-500"
-              onClick={uploadStarredFile}
+              onClick={() => RestoreFile(UniqueFileID)}
             >
               <MdOutlineRestore size={20} className="mr-2" /> Restore
             </button>
@@ -116,12 +151,14 @@ const MoreOptionPopup = ({
               <RiDeleteBin6Line size={20} className="mr-2" /> Delete forever
             </button>
           ) : (
-            <button
-              className="flex items-center  pl-3 w-full py-1 mb-1 hover:bg-gray-200 hover:text-red-500"
-              onClick={uploadBinFile}
-            >
-              <RiDeleteBin6Line size={20} className="mr-2" /> Add to Bin
-            </button>
+            currentActiveTab !== "Starred" && (
+              <button
+                className="flex items-center  pl-3 w-full py-1 mb-1 hover:bg-gray-200 hover:text-red-500"
+                onClick={uploadBinFile}
+              >
+                <RiDeleteBin6Line size={20} className="mr-2" /> Add to Bin
+              </button>
+            )
           )}
         </div>
       )}

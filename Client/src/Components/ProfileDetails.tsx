@@ -13,12 +13,14 @@ const ProfileDetails = () => {
     navigate("/signin");
     toast.success("SignOut SuccessFully!");
   };
-  const { currentUser } = filesDataArray;
+  const { currentUser,activeUsers } = filesDataArray;
   const getInitial = currentUser.email[0];
   console.log(currentUser);
+  const currentU = activeUsers.filter((item:string | any) => item.email === currentUser.email)
+  const {email,name} = currentU[0]
   return (
     <div className="absolute flex flex-col items-center p-6 border border-gray-300 rounded-lg shadow-lg bg-white right-5 z-30">
-      <p className="font-semibold text-2xl mb-4">{"name"}</p>
+      <p className="font-semibold text-2xl mb-4">{name}</p>
       {currentUser.profilePhoto ? (
         <img
           src={currentUser.profilePhoto}
@@ -29,7 +31,7 @@ const ProfileDetails = () => {
         <p className="w-20 h-20 rounded-full mb-6">{getInitial}</p>
       )}
       <p className="text-gray-600 text-lg mb-6">
-        {currentUser.email && currentUser.email}
+        {email && email}
       </p>
       <button
         onClick={onSignOut}

@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
-const { uploadToCloudinary } = require('../Services/cloudinary')
-const cloudinary = require("../Services/cloudinary") 
+const { uploadToCloudinary } = require("../Services/cloudinary");
+const cloudinary = require("../Services/cloudinary");
 require("../Models/filesUploadData");
 
 const file = mongoose.model("fileDetails");
@@ -19,7 +19,7 @@ async function handleFileUpload(req, res) {
         status: "exists",
         message: "File already exists",
         file: existingFile,
-        isExist : true
+        isExist: true,
       });
     }
 
@@ -70,6 +70,24 @@ async function handleBinUpload(req, res) {
     return res.json({ status: "OK✅ for handling Bin" });
   } catch (err) {
     res.json({ status: "error🔴 for handling Bin", error: err.message });
+  }
+}
+
+async function handleRestoreFile(req, res) {
+  try {
+    const { selectedFileIds } = req.body.data;
+    const data = await BinFiles.find({ _id: selectedFileIds });
+    const { fileData, origFileName } = data[0];
+    let newFile = await file.create({
+      fileData: fileData,
+      origFileName: origFileName,
+    });
+    await newFile.save();
+    await BinFiles.deleteMany({ _id: { $in: selectedFileIds } });
+    return res.json({ status: "OK🟩", file: newFile });
+  } catch (error) {
+    console.error("Error while restoring file:", err);
+    res.status(500).json({ status: "error🔴", error: err.message });
   }
 }
 
@@ -126,6 +144,17 @@ async function deleteSelectedBinFiles(req, res) {
   }
 }
 
+async function removeStarredFiles(req, res) {
+  const { selectedFileIds } = req.body;
+
+  try {
+    await StarredFiles.deleteMany({ _id: { $in: selectedFileIds } });
+    return res.json({ status: "OK✅ Selected bin files deleted" });
+  } catch (error) {
+    return res.json({ status: "Error🔴", error: error.message });
+  }
+}
+
 module.exports = {
   handleFileUpload,
   getFileData,
@@ -135,4 +164,6 @@ module.exports = {
   getStarredFileData,
   deleteAllBinFiles,
   deleteSelectedBinFiles,
+  removeStarredFiles,
+  handleRestoreFile,
 };
