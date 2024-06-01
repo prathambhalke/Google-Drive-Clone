@@ -62,7 +62,7 @@ const SideBar = () => {
       .then((res) => {
         if (res.data.isExist) toast.success(`${file.name} already exists`);
         else toast.success(`${file.name}\nuploaded successfully! 📄`);
-        console.log("res", res);
+        // console.log("res", res);
       })
       .catch((err) => console.log("err", err));
   };

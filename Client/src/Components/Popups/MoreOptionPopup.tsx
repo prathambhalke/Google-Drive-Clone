@@ -35,7 +35,7 @@ const MoreOptionPopup = ({
         toast.dark(
           `${foundRequiredFile[0].origFileName}\nadded to Bin successfully! 📄`
         );
-        console.log("res", res);
+        // console.log("res", res);
       })
       .catch((err) => {
         toast.error("failed to add to bin");
@@ -50,7 +50,7 @@ const MoreOptionPopup = ({
         toast.dark(
           `${foundRequiredFile[0].origFileName}\nadded to Starred successfully! 📄`
         );
-        console.log("res", res);
+        // console.log("res", res);
       })
       .catch((err) => {
         toast.info("failed to add to Starred");
@@ -65,7 +65,7 @@ const MoreOptionPopup = ({
       })
       .then((res) => {
         toast.dark("File deleted from bin successfully");
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         toast.error("Failed to delete file from bin");
@@ -81,7 +81,7 @@ const MoreOptionPopup = ({
       })
       .then((res) => {
         toast.dark("removed from Starred");
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
         toast.error("Failed to delete file from bin");

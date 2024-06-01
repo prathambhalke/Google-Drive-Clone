@@ -11,11 +11,15 @@ const ProfileDetails = () => {
 
   const onSignOut = () => {
     navigate("/signin");
+    setFilesDataArray({
+      ...filesDataArray,
+      isAuthenticated: false});
+      localStorage.setItem("isAuthenticated", filesDataArray.isAuthenticated = false)
     toast.success("SignOut SuccessFully!");
   };
   const { currentUser,activeUsers } = filesDataArray;
   const getInitial = currentUser.email[0];
-  console.log(currentUser);
+  // console.log(currentUser);
   const currentU = activeUsers.filter((item:string | any) => item.email === currentUser.email)
   const {email,name} = currentU[0]
   return (
@@ -28,7 +32,7 @@ const ProfileDetails = () => {
           className="w-20 h-20 rounded-full mb-6"
         />
       ) : (
-        <p className="w-20 h-20 rounded-full mb-6">{getInitial}</p>
+        <p className="w-20 h-20 rounded-full mb-6 flex items-center justify-center text-3xl font-bold text-white bg-red-500">{getInitial}</p>
       )}
       <p className="text-gray-600 text-lg mb-6">
         {email && email}

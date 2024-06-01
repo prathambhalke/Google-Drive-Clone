@@ -6,7 +6,7 @@ const CreateFolder = ({ FolderVisibility,setCreateFolderVisible } : any) => {
   const handleCreate = () => {
     // Logic to create the folder goes here
     // For this example, let's just log the folder name
-    console.log('Creating folder:', folderName);
+    // console.log('Creating folder:', folderName);
   };
 
   const handleCancel = () => {

@@ -3,14 +3,23 @@ import { SignInPage, SignupPage, Home } from "./Components";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
+import ProtectedRoute from "./Utils/ProtectedRoute";
+
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" Component={Home} />
-          <Route path="/signup" Component={SignupPage} />
-          <Route path="/signin" Component={SignInPage} />
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signin" element={<SignInPage />} />
         </Routes>
       </Router>
       <ToastContainer

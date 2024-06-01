@@ -26,13 +26,18 @@ const SignInPage = () => {
         toast.success("Login SuccessFully🚀!");
         setFilesDataArray({
           ...filesDataArray,
-          currentUser: { ...filesDataArray.currentUser, email: email },
+          isAuthenticated: true,
+          currentUser: {
+            ...filesDataArray.currentUser,
+            email: email,
+          },
         });
+        
         navigate("/");
       })
       .catch((err) => {
         toast.error("Invalid UserName or Password⚠️");
-        console.log("🔴", err);
+        // console.log("🔴", err);
       });
   };
 

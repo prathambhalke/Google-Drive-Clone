@@ -4,7 +4,7 @@ import { MdImageNotSupported } from "react-icons/md";
 import MoreOptionPopup from "./Popups/MoreOptionPopup";
 
 const ItemCard = ({file,id, togglePopupVisibility, visiblePopupIndex} : any) => {
-  console.log(file)
+  // console.log(file)
   return (
     <div
     className="file-card w-[20%] h-56 p-2 rounded-lg bg-blue-50 border border-gray-200 shadow-sm mx-2 my-4 flex flex-col relative hover:bg-gray-100 transform transition-transform duration-300 hover:scale-105"

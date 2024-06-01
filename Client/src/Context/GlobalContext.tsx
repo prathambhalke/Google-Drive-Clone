@@ -3,6 +3,7 @@ import { createContext, useState } from "react";
 export const globalContextProvider = createContext({});
 
 const GlobalStateManagement = {
+  isAuthenticated: false,
   filesData: [],
   activeUsers : [],
   currentUser: {
