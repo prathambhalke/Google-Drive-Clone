@@ -19,7 +19,7 @@ const SideBar = () => {
   const [imageBase64, setImageBase64] = useState("");
 
   const Ref = useRef<HTMLInputElement>(null);
-  const { filesDataArray, setFilesDataArray } = useContext(globalContextProvider);
+  const { filesDataArray, setFilesDataArray } : any = useContext(globalContextProvider);
 
   const changeTab = (tabName: any) => {
     setActiveTab(tabName);
@@ -46,11 +46,11 @@ const SideBar = () => {
   };
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let file = e.target.files[0];
+    let file = e.target.files?.[0] ;
     if (e.target.files && e.target.files.length > 0) {
-      setFileData(file);
-      setFileToBase64(file);
-      setNewSelectVisible(false);
+      file && setFileData(file);
+      file && setFileToBase64(file);
+      file && setNewSelectVisible(false);
     }
   };
 
@@ -75,7 +75,7 @@ const SideBar = () => {
   ];
 
   return (
-    <div className="flex pb-3 justify-center">
+    <div className="flex pb-3">
       {/* Sidebar */}
       <div className="flex flex-col w-36 bg-transparent mx-14 mt-2 relative">
         <div>

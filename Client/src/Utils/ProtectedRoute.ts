@@ -3,7 +3,7 @@ import { globalContextProvider } from "../Context/GlobalContext";
 import { useContext } from "react";
 
 const ProtectedRoute = ({ children } : any) => {
-    const { filesDataArray, setFilesDataArray } = useContext(
+    const { filesDataArray, setFilesDataArray } : any= useContext(
         globalContextProvider
       );
     //   console.log(filesDataArray.isAuthenticated, "☹️☹️☹️☹️☹️☹️☹️☹️")

@@ -9,7 +9,7 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { filesDataArray, setFilesDataArray } = useContext(
+  const { filesDataArray, setFilesDataArray } : any  = useContext(
     globalContextProvider
   );
 
@@ -34,10 +34,11 @@ const SignInPage = () => {
         });
         
         navigate("/");
+        return res
       })
       .catch((err) => {
         toast.error("Invalid UserName or Password⚠️");
-        // console.log("🔴", err);
+        console.log("🔴", err);
       });
   };
 

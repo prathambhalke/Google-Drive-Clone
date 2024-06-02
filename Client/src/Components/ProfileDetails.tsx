@@ -5,7 +5,7 @@ import { globalContextProvider } from "../Context/GlobalContext";
 
 const ProfileDetails = () => {
   const navigate = useNavigate();
-  const { filesDataArray, setFilesDataArray } = useContext(
+  const { filesDataArray, setFilesDataArray } : any = useContext(
     globalContextProvider
   );
 

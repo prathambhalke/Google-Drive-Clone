@@ -1,16 +1,15 @@
 import { useContext, useState } from "react";
-import { FaGoogleDrive } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import ProfileDetails from "./ProfileDetails";
 import { globalContextProvider } from "../Context/GlobalContext";
-
+import drive from "../../public/Images/drive.png";
 const Header = () => {
   const [profileDetailsVisible, setProfileDetailsVisible] = useState(false);
   const { filesDataArray, setFilesDataArray } = useContext(
     globalContextProvider
   );
   const { currentUser } = filesDataArray;
-  const getInitial = currentUser.email[0];
+  const getInitial = currentUser.email[0] || "guest";
   const onProfileClick = () => {
     setProfileDetailsVisible(!profileDetailsVisible);
   };
@@ -19,9 +18,9 @@ const Header = () => {
       <header className="flex h-16 w-screen items-center justify-between  py-2">
         <div className="w-16 pl-1 duration-500 ml-8">
           <a href="/" className="flex w-fit items-center space-x-2 p-1">
-            <FaGoogleDrive size={40} />
+            <img src={drive} alt="logo image" className="w-2/4" />
             <h1 className="text-2xl tracking-tight text-textC tablet:block">
-              StudDrive
+              Drive
             </h1>
           </a>
         </div>
@@ -40,17 +39,9 @@ const Header = () => {
           title="View Profile"
           onClick={onProfileClick}
         >
-          {currentUser.profilePhoto ? (
-            <img
-              src={currentUser.profilePhoto}
-              alt="avatar"
-              className="h-full w-full rounded-full object-center"
-            />
-          ) : (
-            <p className="h-full w-full rounded-full flex items-center justify-center font-bold bg-red-500 text-lg ">
-              {getInitial || "G"}
-            </p>
-          )}
+          <p className="h-full w-full rounded-full flex items-center justify-center font-bold bg-red-500 text-xl ">
+            {getInitial || "G"}
+          </p>
         </div>
       </header>
       {profileDetailsVisible && <ProfileDetails />}

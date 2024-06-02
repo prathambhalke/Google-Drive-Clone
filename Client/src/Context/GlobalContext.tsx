@@ -1,8 +1,9 @@
 import { createContext, useState } from "react";
+import { GlobalState } from "../Utils/types";
 
 export const globalContextProvider = createContext({});
 
-const GlobalStateManagement = {
+const GlobalStateManagement: GlobalState = {
   isAuthenticated: false,
   filesData: [],
   activeUsers : [],
@@ -13,7 +14,7 @@ const GlobalStateManagement = {
   },
   currentActiveTab : ""
 };
-const GlobalContext = ({ children }: any) => {
+const GlobalContext = ({ children }: { children: React.ReactNode }) => {
   const [filesDataArray, setFilesDataArray] = useState(GlobalStateManagement);
 
   return (
